@@ -1,0 +1,9 @@
+<panningConfiguration dimension="2" infinite="false">
+  <loudspeaker channel="1" id="L">
+    <cart x="1.600" y="0.50" z="0.000"/>
+  </loudspeaker>
+  <loudspeaker channel="2" id="R">
+    <cart x="1.600" y="-0.50" z="-0.000"/>
+  </loudspeaker>
+  <triplet l1="L" l2="R"/>
+</panningConfiguration>

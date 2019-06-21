@@ -1,0 +1,402 @@
+# IMPORTANT! there are some runner-specific variable values that need to be set in the runner.
+# Carefully read the instructions on .gitlab-ci-templates.yml
+
+# All the template jobs with the actual scripts used for the various stages are imported from the following file
+include: 
+   - local: '.gitlab-ci-templates.yml'
+
+#############################################################################
+#                                  CONFIG                                   #
+#############################################################################
+
+#----------------------------- Pipeline stages ------------------------------
+stages:
+  - config_and_generate
+  - build
+  - test
+  - deploy
+
+#------------- global variable to enable-disable specific jobs  -------------
+
+variables: 
+   # those variables can be set/unset based on the currently active runners.
+   # example: If there is no runner for python 3.6, the job will be pending and causing the whole stage to be pending and eventually fail. 
+   # Setting RUNNER_MACOS_PYTHON_36="OFF" allows to say that at the moment there are no runners for macosx-py36 tag.
+   # If you want to avoid committing each time you change those variables, you can also trigger a pipeline from the CI/CD->Pipelines webpage, providing the changed variable from the Run Pipeline UI
+   RUNNER_MACOS_STANDARD: "ON" 
+   RUNNER_MACOS_PYTHON_36: "ON" # active runners: None
+   RUNNER_MACOS_PYTHON_37: "ON" # active runners: MacMini
+   RUNNER_MACOS_ALL: "OFF"
+   RUNNER_WINDOWS_STANDARD: "ON"
+   RUNNER_WINDOWS_PYTHON_36: "ON" # active runners: UOS Windows
+   RUNNER_WINDOWS_PYTHON_37: "ON" # active runners: None
+   RUNNER_WINDOWS_ALL: "OFF" 
+
+.runner_macos_standard_template: &runner_macos_standard
+  only:
+    variables:
+      - $RUNNER_MACOS_STANDARD == "ON"  
+  tags:
+    - macosx
+
+.runner_macos_python_36_template: &runner_macos_python_36
+  only:
+    variables:
+      - $RUNNER_MACOS_PYTHON_36 == "ON"  
+  tags:
+    - macosx-py36  
+
+.runner_macos_python_37_template: &runner_macos_python_37
+  only:
+    variables:
+      - $RUNNER_MACOS_PYTHON_37 == "ON"
+  tags:
+    - macosx-py37
+
+.runner_macos_all_template: &runner_macos_all
+  only:
+    variables:
+      - $RUNNER_MACOS_ALL == "ON"
+  tags:
+    - macosx-all
+
+.runner_windows_standard_template: &runner_windows_standard
+  only:
+    variables:
+      - $RUNNER_WINDOWS_STANDARD == "ON"  
+  tags:
+    - windows
+
+.runner_windows_python_36_template: &runner_windows_python_36
+  only:
+    variables:
+      - $RUNNER_WINDOWS_PYTHON_36 == "ON"
+  tags:
+    - windows-py36  
+
+.runner_windows_python_37_template: &runner_windows_python_37
+  only:
+    variables:
+      - $RUNNER_WINDOWS_PYTHON_37 == "ON"
+  tags:
+    - windows-py37  
+
+
+.runner_windows_all_template: &runner_windows_all
+  only:
+    variables:
+      - $RUNNER_WINDOWS_ALL == "ON"
+  tags:
+    - windows-all
+
+
+#############################################################################
+#                          CONFIG AND GENERATE                              #
+#############################################################################
+
+#---------------------- MacOS config-and-generate jobs ----------------------
+
+config-macosx-standard:
+  stage: config_and_generate
+  #usage of hidden job as a template for this stage, implicitly providing job-specifing variables
+  extends: .config_and_generate_macos_template
+  variables:
+    BUILD_FOLDER: build_standard
+    CMAKE_OPTIONS: "-DVISR_DIR=$VISR_BUILD_DIR/src"
+    GENERATOR: "Xcode"
+  <<: *runner_macos_standard
+
+config-macosx-full-py36:
+  extends: config-macosx-standard
+  variables:
+    BUILD_FOLDER: build_full_py36
+    CMAKE_OPTIONS: "-DVISR_DIR=$VISR_BUILD_DIR_PYTHON36/src
+                    -DBUILD_PYTHON_PLUGINS=ON
+                    -DBUILD_MDO=ON"
+  <<: *runner_macos_python_36
+
+config-macosx-full-py37:
+  extends: config-macosx-standard
+  variables:
+    BUILD_FOLDER: build_full_py37
+    CMAKE_OPTIONS: "-DVISR_DIR=$VISR_BUILD_DIR_PYTHON37/src
+                    -DBUILD_PYTHON_PLUGINS=ON
+                    -DBUILD_MDO=ON"
+  <<: *runner_macos_python_37
+
+config-macosx-all:
+  extends: config-macosx-standard
+  variables:
+    BUILD_FOLDER: build_all
+    CMAKE_OPTIONS: "-DBUILD_DAWPLUGINS_AAX=ON
+                    -DAAX_INCLUDE_DIR=$AAX_INCLUDE_DIR 
+                    -DBUILD_DAWPLUGINS_AU=ON
+                    -DBUILD_DAWPLUGINS_STANDALONE=ON
+                    -DVISR_DIR=$VISR_BUILD_DIR_PYTHON37/src
+                    -DBUILD_PYTHON_PLUGINS=ON
+                    -DBUILD_MDO=ON"
+  <<: *runner_macos_all
+
+#---------------------- Windows config-and-generate jobs ----------------------
+config-windows-standard:
+  stage: config_and_generate
+  #usage of hidden job as a template for this stage, implicitly providing job-specifing variables
+  before_script: #here I'm using the before_script instead of variables because using CI "variables" I cannot have nested variables resolution
+     - SET  CMAKE_OPTIONS=-DVISR_DIR=%VISR_BUILD_DIR%/src
+                          -DSPHINX_EXECUTABLE=%SPHINX_EXECUTABLE_PY37%
+  extends: .config_and_generate_windows_template
+  variables:
+    BUILD_FOLDER: build_standard
+    GENERATOR: "Visual Studio 15 2017 Win64"
+  <<: *runner_windows_standard
+
+config-windows-full-py36:
+  extends: config-windows-standard
+  before_script: #here I'm using the before_script instead of variables because using CI "variables" I cannot have nested variables resolution
+     - SET  CMAKE_OPTIONS=-DVISR_DIR=%VISR_BUILD_DIR_PYTHON36%/src
+                          -DBUILD_PYTHON_PLUGINS=ON
+                          -DBUILD_MDO=ON
+                          -DSPHINX_EXECUTABLE=%SPHINX_EXECUTABLE_PY36%
+  variables:
+    BUILD_FOLDER: build_full_py36
+  <<: *runner_windows_python_36
+
+config-windows-full-py37:
+  extends: config-windows-standard
+  before_script:
+     - SET  CMAKE_OPTIONS=-DVISR_DIR=%VISR_BUILD_DIR_PYTHON37%/src 
+                          -DBUILD_PYTHON_PLUGINS=ON
+                          -DBUILD_MDO=ON
+                          -DSPHINX_EXECUTABLE=%SPHINX_EXECUTABLE_PY37%
+  variables:
+    BUILD_FOLDER: build_full_py37
+  <<: *runner_windows_python_37
+
+config-windows-all:
+  extends: config-windows-standard
+  before_script:
+     - SET CMAKE_OPTIONS=-DBUILD_DAWPLUGINS_AAX=ON
+                         -DAAX_INCLUDE_DIR=%AAX_INCLUDE_DIR% 
+                         -DBUILD_DAWPLUGINS_STANDALONE=ON
+                         -DVISR_DIR=%VISR_BUILD_DIR_PYTHON37%/src 
+                         -DBUILD_PYTHON_PLUGINS=ON
+                         -DBUILD_MDO=ON
+                         -DSPHINX_EXECUTABLE=%SPHINX_EXECUTABLE_PY37%
+  variables:
+    BUILD_FOLDER: build_all
+  <<: *runner_windows_all
+
+
+#############################################################################
+#                                  BUILD                                    #
+#############################################################################
+
+#----------------------------- MacOS build jobs -----------------------------
+build-macosx-standard:
+  stage: build
+  extends: .build_macos_template
+  dependencies:
+    - config-macosx-standard 
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_macos_standard
+
+build-macosx-full-py36:
+  extends: build-macosx-standard
+  dependencies:
+    - config-macosx-full-py36
+  variables:
+    BUILD_FOLDER: build_full_py36
+  <<: *runner_macos_python_36  
+
+build-macosx-full-py37:
+  extends: build-macosx-standard
+  dependencies:
+    - config-macosx-full-py37
+  variables:
+    BUILD_FOLDER: build_full_py37
+  <<: *runner_macos_python_37
+
+
+#----------------------------- Windows build jobs -----------------------------
+build-windows-standard:
+  stage: build
+  extends: .build_windows_template
+  dependencies:
+    - config-windows-standard 
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_windows_standard
+
+build-windows-full-py36:
+  extends: build-windows-standard
+  before_script: 
+    - SET PYTHONHOME=%PYTHONHOME_PY36%
+  dependencies:
+    - config-windows-full-py36
+  variables:
+    BUILD_FOLDER: build_full_py36
+  <<: *runner_windows_python_36
+
+build-windows-full-py37:
+  extends: build-windows-standard
+  before_script: 
+    - SET PYTHONHOME=%PYTHONHOME_PY37%
+  dependencies:
+    - config-windows-full-py37
+  variables:
+    BUILD_FOLDER: build_full_py37
+  <<: *runner_windows_python_37
+
+#############################################################################
+#                                  TEST                                     #
+#############################################################################
+
+#----------------------------- MacOS test jobs -----------------------------
+test-macosx-standard:
+  stage: test
+  #usage of hidden job for defining a common default job configuration
+  extends: .test_macos_template
+  dependencies:
+    - build-macosx-standard
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_macos_standard
+  allow_failure: true
+
+# test-macosx-full-py36:
+#   extends: test-macosx-standard
+#   dependencies:
+#     - build-macosx-full-py36
+#   variables:
+#     BUILD_FOLDER: build_full_py36
+#   <<: *runner_macos_python_36  
+#   allow_failure: true
+
+# test-macosx-full-py37:
+#   extends: test-macosx-standard
+#   dependencies:
+#     - build-macosx-full-py37
+#   variables:
+#     BUILD_FOLDER: build_full_py37
+#   <<: *runner_macos_python_37
+#   allow_failure: true
+  
+# test-macosx-full-py37:
+#   stage: test
+#   extends: .test_macos_template
+#   before_script: 
+#      - export  PYTHONHOME=$PYTHONHOME_PY37
+#      - export  PYTHONPATH="$VISR_BUILD_DIR_PYTHON37/python/Release:$VISR_SOURCE_DIR/src/python/packages"
+#   dependencies:
+#     - build-macosx-full-py37
+#   variables:
+#     BUILD_FOLDER: build_full_py37
+#   <<: *runner_macos_python_37
+#   allow_failure: true
+
+#----------------------------- Windows test jobs -----------------------------
+
+test-windows-standard:
+  stage: test
+  #usage of hidden job for defining a common default job configuration
+  extends: .test_windows_template
+  dependencies:
+    - build-windows-standard
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_windows_standard
+
+# test-windows-full-py36:
+#   extends: test-windows-standard
+#   dependencies:
+#     - build-windows-full-py36
+#   variables:
+#     BUILD_FOLDER: build_full_py36
+#   <<: *runner_windows_python_36
+#   allow_failure: true
+
+# test-windows-full-py37:
+#   extends: test-windows-standard
+#   dependencies:
+#     - build-windows-full-py37
+#   variables:
+#     BUILD_FOLDER: build_full_py37
+#   <<: *runner_windows_python_37
+#   allow_failure: true
+
+# test-windows-full-py37:
+#   stage: test
+#   extends: .test_windows_template
+#   before_script: 
+#     - SET PYTHONHOME=%PYTHONHOME_PY37%
+#     - SET PYTHONPATH=%VISR_BUILD_DIR_PYTHON37%/python/Release;%VISR_SOURCE_DIR%/src/python/packages
+#   dependencies:
+#     - build-windows-full-py37
+#   variables:
+#     BUILD_FOLDER: build_full_py37
+#   <<: *runner_windows_python_37
+#   allow_failure: true
+
+#############################################################################
+#                                 DEPLOY                                    #
+#############################################################################
+
+#----------------------------- MacOS deploy jobs -----------------------------
+deploy-macosx-standard:
+  stage: deploy
+  #usage of hidden job for defining a common default job configuration
+  extends: .deploy_macos_template
+  dependencies:
+    - build-macosx-standard
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_macos_standard
+
+deploy-macosx-full-py36:
+  extends: deploy-macosx-standard
+  dependencies:
+    - build-macosx-full-py36
+  variables:
+    BUILD_FOLDER: build_full_py36
+  <<: *runner_macos_python_36
+
+deploy-macosx-full-py37:
+  extends: deploy-macosx-standard
+  dependencies:
+    - build-macosx-full-py37
+  variables:
+    BUILD_FOLDER: build_full_py37  
+  <<: *runner_macos_python_37
+
+#----------------------------- Windows deploy jobs -----------------------------
+
+deploy-windows-standard:
+  stage: deploy
+  #usage of hidden job for defining a common default job configuration
+  extends: .deploy_windows_template
+  dependencies:
+    - build-windows-standard
+  variables:
+    BUILD_FOLDER: build_standard
+  <<: *runner_windows_standard
+
+deploy-windows-full-py36:
+  extends: deploy-windows-standard
+  before_script: 
+    - SET PYTHONHOME=%PYTHONHOME_PY36%
+  dependencies:
+    - build-windows-full-py36
+  variables:
+    BUILD_FOLDER: build_full_py36  
+  <<: *runner_windows_python_36
+
+deploy-windows-full-py37:
+  extends: deploy-windows-standard
+  before_script: 
+    - SET PYTHONHOME=%PYTHONHOME_PY37%
+  dependencies:
+    - build-windows-full-py37
+  variables:
+    BUILD_FOLDER: build_full_py37  
+  <<: *runner_windows_python_37

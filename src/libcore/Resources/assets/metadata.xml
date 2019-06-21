@@ -1,0 +1,24 @@
+<DEMO_TABLE_DATA>
+    <COLUMNS>
+        <COLUMN columnId="1" name="Field" width="100"/>
+        <COLUMN columnId="2" name="Subfield" width="100"/>
+        <COLUMN columnId="3" name="Units" width="50"/>
+        <COLUMN columnId="4" name="Type" width="100"/>
+        <COLUMN columnId="5" name="Range" width="100"/>
+        <COLUMN columnId="6" name="Value" width="100"/>
+        <COLUMN columnId="7" name="Description" width="200"/>
+    </COLUMNS>
+    <DATA>
+        <ITEM Field="ID" Subfield="" Units="" Type="IntNumber" Range="0:inf" Value="" Description="Unique (integer) loudspeaker identifier" />
+        <ITEM Field="Channel" Subfield="" Units="" Type="IntNumber" Range="0:inf" Value="" Description="Physical output channel number" />
+        <ITEM Field="Position" Subfield="IntAzimuth" Units="Deg." Type="IntNumber" Range="0:360" Value="0" Description="Loudspeaker position relative to central listening position" />
+        <ITEM Field="Position" Subfield="IntElevation" Units="Deg." Type="IntNumber" Range="0:360" Value="0" Description="Loudspeaker position relative to central listening position" />
+        <ITEM Field="Position" Subfield="DecDistance" Units="m" Type="DecNumber" Range="0:inf" Value="1" Description="Loudspeaker position relative to central listening position" />
+        <ITEM Field="Gain" Subfield="" Units="dB" Type="DecNumber" Range="-inf:inf" Value="0" Description="" />
+        <ITEM Field="Delay" Subfield="" Units="s" Type="DecNumber" Range="0:inf" Value="0" Description="" />
+        <ITEM Field="Label" Subfield="" Units="" Type="Text" Range="" Value="defaultName" Description="Loudspeaker label, used for display" />
+        <ITEM Field="Auxiliary loudspeaker" Type="Boolean" Range="" Subfield="" Units="" Value="0" Description="Determines whether the loudspeaker should be considered as part of the main array or as an extra loudspeaker" />
+        <ITEM Field="Quality" Subfield="" Units="" Type="Choice" Range="Low;Medium;High" Value="2" Description="Loudspeaker quality tag" />
+        <ITEM Field="Function" Subfield="" Units="" Type="Choice" Range="Primary;Secondary" Value="1" Description="Used in combination with the audio object function field to control the placement of certain types of sound" />
+    </DATA>
+</DEMO_TABLE_DATA>

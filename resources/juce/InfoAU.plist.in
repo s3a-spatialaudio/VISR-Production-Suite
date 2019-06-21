@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist>
+  <dict>
+    <key>CFBundleExecutable</key>
+    <string>VISR @name_@</string>
+    <key>CFBundleIconFile</key>
+    <string></string>
+    <key>CFBundleIdentifier</key>
+    <string>s3a.visr.@CurrLib@</string>
+    <key>CFBundleName</key>
+    <string>VISR @name_@</string>
+    <key>CFBundleDisplayName</key>
+    <string>VISR @name_@</string>
+    <key>CFBundlePackageType</key>
+    <string>BNDL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@VISR_PRODUCTION_SUITE_MAJOR_VERSION@.@VISR_PRODUCTION_SUITE_MINOR_VERSION@.@VISR_PRODUCTION_SUITE_PATCH_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@VISR_PRODUCTION_SUITE_MAJOR_VERSION@.@VISR_PRODUCTION_SUITE_MINOR_VERSION@.@VISR_PRODUCTION_SUITE_PATCH_VERSION@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>AudioComponents</key>
+    <array>
+      <dict>
+        <key>name</key>
+        <string>visr: @CurrLib@</string>
+        <key>description</key>
+        <string>@CurrLib@</string>
+        <key>factoryFunction</key>
+        <string>@CurrLib@Factory</string>
+        <key>manufacturer</key>
+        <string>Visr</string>
+        <key>type</key>
+        <string>aufx</string>
+        <key>subtype</key>
+        <string>@pluginCode@</string>
+        <key>version</key>
+        <integer>65536</integer>
+      </dict>
+    </array>
+  </dict>
+</plist>

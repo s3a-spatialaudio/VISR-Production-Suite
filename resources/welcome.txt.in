@@ -1,0 +1,5 @@
+Welcome to the installation of the VISR Production Suite version @VISR_PRODUCTION_SUITE_VERSION_STRING@.
+
+This installer will guide you through the setup process.
+
+The files will be installed to @CMAKE_INSTALL_PREFIX@.

@@ -1,0 +1,16 @@
+#pragma once
+
+#define JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED 1
+#define DONT_SET_USING_JUCE_NAMESPACE 1
+
+//dawutilities and dawsupport just need these modules
+#include <juce_core/juce_core.h>
+#include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_audio_devices/juce_audio_devices.h>
+
+namespace ProjectInfo
+{
+const char* const  projectName    = "@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@";
+const char* const  versionString  = "@VISR_PRODUCTION_SUITE_MAJOR_VERSION@.@VISR_PRODUCTION_SUITE_MINOR_VERSION@.@VISR_PRODUCTION_SUITE_PATCH_VERSION@";
+//const int          versionNumber  = 0x10100;
+}

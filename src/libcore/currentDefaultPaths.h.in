@@ -1,0 +1,15 @@
+#ifndef CORE_CURRENTDEFAULTPATHS_HPP_INCLUDED
+#define CORE_CURRENTDEFAULTPATHS_HPP_INCLUDED
+
+namespace visr_production_suite
+{
+namespace core
+{
+    juce::String defaultBuildPath = "@CMAKE_BINARY_DIR@";
+    juce::String defaultSrcPath = "@CMAKE_SOURCE_DIR@";
+    juce::String defaultInstallPath = "@CMAKE_INSTALL_PREFIX@";
+
+} // namespace core
+} // namespace visr_production_suite
+
+#endif // VISR_DAWUTILITIES_CURRENTDEFAULTPATHS_HPP_INCLUDED

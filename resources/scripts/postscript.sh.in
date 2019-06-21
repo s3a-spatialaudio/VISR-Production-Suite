@@ -1,0 +1,89 @@
+#!/bin/sh
+RPATH="@rpath"
+
+function copy_to_default_dir {
+if [ -d "@CMAKE_INSTALL_PREFIX@/$1" ]; then
+    DEST="$2"
+    if [ $3 = 1 ]; then
+        DEST="$2/VISR-Production-Suite"
+    fi
+    sudo mkdir -p "$DEST" && sudo cp -a "@CMAKE_INSTALL_PREFIX@/$1/." "$_"
+fi
+}
+
+copy_to_default_dir dawplugins/vst  "/Library/Audio/Plug-Ins/VST" 1
+copy_to_default_dir dawplugins/vst3 "/Library/Audio/Plug-Ins/VST3" 1
+# 0 as third argument means "do not create a main folder for the plugins". This is needed because apparently if there are subfolders in Components the plugins inside are not scanned
+copy_to_default_dir dawplugins/au   "/Library/Audio/Plug-Ins/Components" 0
+
+if [ -d "/Library/Application Support/Avid/Audio/Plug-Ins" ]; then
+copy_to_default_dir dawplugins/aax  "/Library/Application Support/Avid/Audio/Plug-Ins" 0
+fi
+
+# Determine the Python home directory
+
+# First check whether there is a use-local anaconda directory, this has the highest priority.
+if [ -d "${HOME}/anaconda3" ]; then
+  PYTHONHOME=${HOME}/anaconda3
+  PYTHONLIBPATH="${HOME}/anaconda3/lib"
+elif [ -d "${HOME}/anaconda" ]; then
+  PYTHONHOME=${HOME}/anaconda
+  PYTHONLIBPATH="${HOME}/anaconda/lib"
+# Then check whether there is a system-wide python installation.
+elif [ -d "/anaconda3" ]; then
+  PYTHONHOME=/anaconda3
+  PYTHONLIBPATH="/anaconda3/lib"
+elif [ -d "/anaconda" ]; then
+  PYTHONHOME=/anaconda
+  PYTHONLIBPATH="/anaconda/lib"
+# Check for a Python installed through homebrew.
+elif [ -d "/usr/local/Frameworks/Python.framework/Versions/@PYTHON_MAJOR_MINOR@" ]; then
+  PYTHONHOME="/usr/local/Frameworks/Python.framework/Versions/@PYTHON_MAJOR_MINOR@"
+  PYTHONLIBPATH="${PYTHONHOME}/lib"
+# Fall back to the system python (if present) on MacOS >= 10.12
+elif [ -d "/Library/Frameworks/Python.framework/Versions/@PYTHON_MAJOR_MINOR@" ]; then
+  PYTHONHOME="/Library/Frameworks/Python.framework/Versions/@PYTHON_MAJOR_MINOR@"
+  PYTHONLIBPATH="${PYTHONHOME}/lib"
+else
+  echo "No valid Python installation found."
+  PYTHONHOME=""
+  PYTHONLIBPATH=""
+fi
+
+#delete all rpaths from VISR libraries to avoid rpath conflicts
+for filename in @CMAKE_INSTALL_PREFIX@/3rd/*.dylib; do
+    rpathvals=$(otool -l "$filename" | grep -F "path " | awk -F"path "  '{print $2}' | awk -F" \\\(" '{print $1}' )
+    for rpath in $rpathvals; do
+        install_name_tool -delete_rpath "$rpath" $filename
+    done
+done
+
+#delete all rpaths from VISR python externals to avoid rpath conflicts
+keyw="path "
+for filename in @CMAKE_INSTALL_PREFIX@/python/*.so; do
+    rpathvals=$(otool -l "$filename" | grep -F "path " | awk -F"path "  '{print $2}' | awk -F" \\\(" '{print $1}' )
+    for rpath in $rpathvals; do
+        install_name_tool -delete_rpath "$rpath" $filename
+    done
+done
+
+
+if [ -d "@CMAKE_INSTALL_PREFIX@/3rd" ] && [ ! -z $PYTHONLIBPATH ]; then
+install_name_tool -add_rpath ${PYTHONLIBPATH} @CMAKE_INSTALL_PREFIX@/3rd/libpythonsupport.dylib
+install_name_tool -add_rpath ${PYTHONLIBPATH} @CMAKE_INSTALL_PREFIX@/3rd/libpythoncomponents.dylib
+fi
+
+# Pre-populate the VISR-launchagent.plist file
+sed -i "" "s|PYTHONHOME_PLACEHOLDER|$PYTHONHOME|" @CMAKE_INSTALL_PREFIX@/resources/@LAUNCHAGENT_PLIST_FILENAME@
+
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/audiointerfaces.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/efl.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/objectmodel.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/panning.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/pml.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/rbbl.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/rcl.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/reverbobject.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/rrl.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/signalflows.so
+sudo install_name_tool -add_rpath "@CMAKE_INSTALL_PREFIX@/3rd" @CMAKE_INSTALL_PREFIX@/python/visr.so

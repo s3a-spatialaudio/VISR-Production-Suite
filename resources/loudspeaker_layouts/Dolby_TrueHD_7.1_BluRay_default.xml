@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panningConfiguration dimension="2" infinite="false">
+   <loudspeaker channel="1" id="L">
+      <polar az="30" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="2" id="R">
+      <polar az="-30" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="3" id="C">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="5" id="Lsr">
+      <polar az="135" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="6" id="Rsr">
+      <polar az="-135" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="7" id="Lss">
+       <polar az="90" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="8" id="Rss">
+       <polar az="-90" el="0" r="1"/>
+   </loudspeaker>
+   <subwoofer assignedLoudspeakers="L, R, C, Lsr, Rsr, Lss, Rss" channel="4" delay="0" eq="lowpass" gainDB="0" weights="1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000"/>
+   <triplet l1="L" l2="C"/>
+   <triplet l1="R" l2="C"/>
+   <triplet l1="Lsr" l2="Lss"/>
+   <triplet l1="Rsr" l2="Rss"/>
+   <triplet l1="Lss" l2="L"/>
+   <triplet l1="Rss" l2="R"/>
+   <triplet l1="Lsr" l2="Rsr"/>
+</panningConfiguration>

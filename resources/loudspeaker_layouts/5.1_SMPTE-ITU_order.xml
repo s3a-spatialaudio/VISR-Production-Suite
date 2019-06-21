@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panningConfiguration dimension="2" infinite="false">
+    <loudspeaker channel="1" id="L">
+        <polar az="30" el="0" r="1"/>
+    </loudspeaker>
+   <loudspeaker channel="2" id="R">
+      <polar az="-30" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="3" id="C">
+       <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="5" id="Ls">
+       <polar az="110" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="6" id="Rs">
+      <polar az="-110" el="0" r="1"/>
+   </loudspeaker>
+   <subwoofer assignedLoudspeakers="L, C, R, Ls, Rs" channel="4" delay="0" eq="lowpass" gainDB="0" weights="1.000000, 1.000000, 1.000000, 1.000000, 1.000000"/>
+   <triplet l1="Rs" l2="Ls"/>
+   <triplet l1="R" l2="Rs"/>
+   <triplet l1="C" l2="R"/>
+   <triplet l1="L" l2="C"/>
+   <triplet l1="Ls" l2="L"/>
+</panningConfiguration>
+
+
+

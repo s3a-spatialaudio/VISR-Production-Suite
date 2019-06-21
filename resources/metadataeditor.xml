@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<MetadataEditor>
+
+  <ObjectMetadataModel>
+    <Metadata columnId="1" name="objectNumber" Unit="" Type="Int" Range="1:inf" Value="1" Description="Unique (integer) object identifier" width="100"/>
+	<Metadata columnId="2" name="label" Unit="" Type="Text" Range="" Value="" Description="Audio object label" width="150"/>
+	<Metadata columnId="3" name="group" Unit="" Type="Int" Range="0:inf" Value="0" Description="Unique (integer) group identifier, 0 means no group" width="70"/>
+    <Metadata columnId="4" name="mdoThreshold" Unit="" Type="Int" Range="0:inf" Value="0" Description="Integer determining number of MDO devices required for object to become MDO, 0 means not MDO" width="100"/>
+    <Metadata columnId="5" name="mdoOnly" Unit="" Type="Boolean" Range="" Value="0" Description="If object can only be MDO (doesn't play if no suitable device available"width="65"/>
+	<Metadata columnId="6" name="mdoMethod" Unit="" Type="Choice" Range="speakerNum;joinOrder;zone;position" Value="3" Description="Method used for routing decisions, 1 means just use speakerNumber"width="80"/>
+	<!--Metadata columnId="7" name="speakerNumber" Unit="" Type="Int" Range="1:inf" Value="1" Description="Defines a loudspeaker number to route to (if method 0 being used)" width="100"/-->
+	<Metadata columnId="7" name="speakerNumber" Unit="" Type="Text" Range="" Value="" Description="Defines a list of loudspeaker numbers to route to (if method 0 being used; comma delimited)" width="100"/>
+	<Metadata columnId="8" name="diffuseness" Unit="" Type="Double" Range="0:1" Value="0" Description="Diffuseness parameter for multi-channel routing" width="90"/>
+	<Metadata columnId="9" name="mdoSpread" Unit="" Type="Boolean" Range="" Value="0" Description="Determines if object spread across all suitable MDO devices"width="80"/>
+	<Metadata columnId="10" name="mdoDynamic" Unit="" Type="Boolean" Range="" Value="0" Description="Determines if MDO object can move, exact behaviour depends on rendering method"width="90"/>
+	<Metadata columnId="11" name="mdoGainDB" Unit="" Type="Double" Range="-60:12" Value="0" Description="Gain in dB to apply to object if played through MDO device"width="100"/>
+	<Metadata columnId="12" name="muteIfObject" Unit="" Type="Int" Range="0:inf" Value="0" Description="Mute object if defined object is active"width="90"/>
+	<Metadata columnId="13" name="exclusivity" Unit="" Type="Boolean" Range="" Value="0" Description="If exclusive to a device"width="80"/>
+    <Metadata columnId="14" name="nearFront" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="15" name="nearSide" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="16" name="nearRear" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="17" name="farFront" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="18" name="farSide" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="19" name="farRear" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="20" name="Above" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="21" name="onDropin" Unit="" Type="Choice" Range="stick;moveFromBed;bestAvailable" Value="1" Description="Option for when new device drops in during playback"width="80"/>
+	<Metadata columnId="22" name="onDropout" Unit="" Type="Choice" Range="mdo;bed;kill" Value="1" Description="Option for when device routed to drops out during playback"width="70"/>
+	<Metadata columnId="23" name="minQuality" Unit="" Type="Choice" Range="low;medium;high" Value="1" Description="Minimum mdo loudspeaker quality" width="100"/>
+	
+  </ObjectMetadataModel>
+  
+  <LoudspeakerMetadataModel>
+    <Metadata columnId="1" name="speakerNumber" Unit="" Type="Int" Range="0:inf" Value="1" Description="Unique (integer) loudspeaker identifier" width="100"/>
+	<Metadata columnId="2" name="label" Unit="" Type="Text" Range="" Value="" Description="Loudspeaker label" width="100"/>
+	<Metadata columnId="3" name="x" Unit="m" Type="Double" Range="-100:100" Value="0" Description="Loudspeaker position relative to central listening position" width="100"/>
+    <Metadata columnId="4" name="y" Unit="m" Type="Double" Range="-100:100" Value="0" Description="Loudspeaker position relative to central listening position" width="100"/>
+    <Metadata columnId="5" name="z" Unit="m" Type="Double" Range="-100:100" Value="0" Description="Loudspeaker position relative to central listening position" width="100"/>
+	<Metadata columnId="6" name="mdo" Unit="" Type="Boolean" Range="" Value="0" Description="Determines whether the loudspeaker should be considered as part of the main array or as an extra loudspeaker" width="100"/>
+    <Metadata columnId="7" name="mdoZone" Unit="" Type="Choice" Range="nearFront;nearSide;nearRear;farFront;farSide;farRear;above" Value="1" Description="zone/category of mdo loudspeaker location" width="100"/>
+    <Metadata columnId="8" name="switch" Unit="" Type="Boolean" Range="" Value="1" Description="If the mdo device is on or off" width="100"/>
+    <Metadata columnId="9" name="joined" Unit="" Type="Int" Range="0:inf" Value="0" Description="Order in which mdo devices joined" width="100"/>
+	<Metadata columnId="10" name="mdoGainDB" Unit="" Type="Double" Range="-60:12" Value="0" Description="Additional gain for mdo device"width="100"/>
+    <Metadata columnId="11" name="mdoQuality" Unit="" Type="Choice" Range="low;medium;high" Value="2" Description="Category of mdo loudspeaker quality" width="100"/>
+  </LoudspeakerMetadataModel>
+  
+  <GroupMetadataModel>
+	<Metadata columnId="1" name="groupNumber" Unit="" Type="Int" Range="1:inf" Value="0" Description="Unique (integer) group identifier" width="100"/>
+	<Metadata columnId="2" name="groupLabel" Unit="" Type="Text" Range="" Value="" Description="Group label" width="150"/>
+    <Metadata columnId="3" name="mdoThreshold" Unit="" Type="Int" Range="0:inf" Value="0" Description="Integer determining number of MDO devices required for object to become MDO, 0 means not MDO" width="100"/>
+    <Metadata columnId="4" name="mdoOnly" Unit="" Type="Boolean" Range="" Value="0" Description="If object can only be MDO (doesn't play if no suitable device available"width="65"/>
+	<Metadata columnId="5" name="mdoMethod" Unit="" Type="Choice" Range="speakerNum;joinOrder;zone;position" Value="3" Description="Method used for routing decisions, 1 means just use speakerNumber"width="80"/>
+	<!--Metadata columnId="6" name="speakerNumber" Unit="" Type="Int" Range="1:inf" Value="1" Description="Defines a loudspeaker number to route to (if method 0 being used)" width="100"/-->
+	<Metadata columnId="6" name="speakerNumber" Unit="" Type="Text" Range="" Value="" Description="Defines a list of loudspeaker numbers to route to (if method 0 being used; comma delimited)" width="100"/>
+	<Metadata columnId="7" name="diffuseness" Unit="" Type="Double" Range="0:1" Value="0" Description="Diffuseness parameter for multi-channel routing" width="90"/>
+	<Metadata columnId="8" name="mdoSpread" Unit="" Type="Boolean" Range="" Value="0" Description="Determines if object spread across all suitable MDO devices"width="80"/>
+	<Metadata columnId="9" name="mdoDynamic" Unit="" Type="Boolean" Range="" Value="0" Description="Determines if MDO object can move, exact behaviour depends on rendering method"width="90"/>
+	<Metadata columnId="10" name="mdoGainDB" Unit="" Type="Double" Range="-60:12" Value="0" Description="Gain in dB to apply to object if played through MDO device"width="100"/>
+	<Metadata columnId="11" name="muteIfObject" Unit="" Type="Int" Range="0:inf" Value="0" Description="Mute object if defined object is active"width="90"/>
+	<Metadata columnId="12" name="exclusivity" Unit="" Type="Boolean" Range="" Value="0" Description="If exclusive to a device"width="80"/>
+    <Metadata columnId="13" name="nearFront" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="14" name="nearSide" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="15" name="nearRear" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="16" name="farFront" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="17" name="farSide" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+    <Metadata columnId="18" name="farRear" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="19" name="above" Unit="" Type="Choice" Range="never;couldBe;shouldBe" Value="1" Description="Zone/category positional flag"width="90"/>
+	<Metadata columnId="20" name="onDropin" Unit="" Type="Choice" Range="stick;moveFromBed;bestAvailable" Value="1" Description="Option for when new device drops in during playback"width="70"/>
+	<Metadata columnId="21" name="onDropout" Unit="" Type="Choice" Range="mdo;bed;kill" Value="1" Description="Option for when device routed to drops out during playback"width="70"/>
+	<Metadata columnId="22" name="minQuality" Unit="" Type="Choice" Range="low;medium;high" Value="1" Description="Minimum mdo loudspeaker quality" width="100"/>
+  </GroupMetadataModel>
+  
+</MetadataEditor>

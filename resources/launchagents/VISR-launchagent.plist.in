@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>at.s3a.@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>sh</string>
+    <string>-c</string>
+    <string>
+    launchctl setenv OPENBLAS_NUM_THREADS 1
+    launchctl setenv PYTHONPATH @CMAKE_INSTALL_PREFIX@/python
+    launchctl setenv PYTHONHOME PYTHONHOME_PLACEHOLDER
+    </string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist>
+  <dict>
+    <key>CFBundleExecutable</key>
+    <string>VISR @name_@</string>
+    <key>CFBundleIconFile</key>
+    <string></string>
+    <key>CFBundleIdentifier</key>
+    <string>s3a.@CurrLib@</string>
+    <key>CFBundleName</key>
+    <string>VISR @name_@</string>
+    <key>CFBundleDisplayName</key>
+    <string>VISR @name_@</string>
+    <key>CFBundlePackageType</key>
+    <string>BNDL</string>
+    <key>CFBundleSignature</key>
+    <string>Visr</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@VISR_PRODUCTION_SUITE_MAJOR_VERSION@.@VISR_PRODUCTION_SUITE_MINOR_VERSION@.@VISR_PRODUCTION_SUITE_PATCH_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@VISR_PRODUCTION_SUITE_MAJOR_VERSION@.@VISR_PRODUCTION_SUITE_MINOR_VERSION@.@VISR_PRODUCTION_SUITE_PATCH_VERSION@</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>S3A</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+  </dict>
+</plist>

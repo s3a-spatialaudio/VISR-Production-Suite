@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panningConfiguration dimension="2" infinite="false">
+   
+   <!-- Stereo -->
+   <loudspeaker channel="1" id="1" mdo="0" name="Main left" gainDB="0" delay="0.0" function="vbap">
+      <polar az="30" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="2" id="2" mdo="0" name="Main right" gainDB="0" delay="0.0" function="vbap">
+      <polar az="-30" el="0" r="1"/>
+   </loudspeaker>
+
+   <!-- MDO devices -->
+   <loudspeaker channel="3" id="3" mdo="1" name="MDO1" gainDB="0.0" delay="0.0" mdoZone="1" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="4" id="4" mdo="1" name="MDO2" gainDB="0.0" delay="0.0" mdoZone="2" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="5" id="5" mdo="1" name="MDO3" gainDB="0.0" delay="0.0" mdoZone="3" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="6" id="6" mdo="1" name="MDO4" gainDB="0.0" delay="0.0" mdoZone="4" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="7" id="7" mdo="1" name="MDO5" gainDB="0.0" delay="0.0" mdoZone="5" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+   <loudspeaker channel="8" id="8" mdo="1" name="MDO6" gainDB="0.0" delay="0.0" mdoZone="6" switch="1">
+      <polar az="0" el="0" r="1"/>
+   </loudspeaker>
+      
+   <!-- 'Virtual' speaker -->
+   <virtualspeaker id="9">
+        <polar az="180.0" el="0" r="1.0"/>
+        <route lspId="1" gainDB="-6.0"/>
+        <route lspId="2" gainDB="-6.0"/>
+    </virtualspeaker>
+	
+   <triplet l1="1" l2="2"/>
+   <triplet l1="2" l2="9"/>
+   <triplet l1="2" l2="1"/>
+   
+</panningConfiguration>

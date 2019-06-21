@@ -1,0 +1,254 @@
+# IMPORTANT! some runner-specific variable values need to be set in the runners.
+#
+# to do so, open the runner configuration file called config.toml (usually in the HOME folder, e.g. under ~/.gitlab-runner folder on MacOS)
+# and add the following under the [[runners]] section, changing the paths accordingly:
+  
+ # environment = [
+ #    "JUCE_ROOT_DIR=/Users/vaae/JUCE",
+ #    "VISR_SOURCE_DIR=/Users/vaae/VISR",
+ #    "VISR_BUILD_DIR=/Users/vaae/build-VISR-py37",
+ #    "VISR_BUILD_DIR_PYTHON36=/Users/vaae/build-VISR-py36",
+ #    "VISR_BUILD_DIR_PYTHON37=/Users/vaae/build-VISR-py37",
+ #    "DOXYGEN_EXECUTABLE=/usr/local/bin/doxygen",
+ #    "DOXYGEN_DOT_EXECUTABLE=/usr/local/bin/dot",
+ #    "LATEX_COMPILER=/Library/TeX/texbin/latex",
+ #    "PDFLATEX_COMPILER=/Library/TeX/texbin/pdflatex",
+ #    "SPHINX_EXECUTABLE=/Users/vaae/anaconda3/envs/py37env/bin/sphinx-build",
+ #    "SPHINX_EXECUTABLE_PY36=/Users/vaae/anaconda3/envs/py36env/bin/sphinx-build",
+ #    "SPHINX_EXECUTABLE_PY37=/Users/vaae/anaconda3/envs/py37env/bin/sphinx-build",
+ #    "PYTHONHOME_PY36=/Users/vaae/anaconda3/envs/py36env",
+ #    "PYTHONHOME_PY37=/Users/vaae/anaconda3/envs/py37env"
+ #  ]
+
+
+# similarly on windows, go to the gitlab-runner.exe folder and in the config.toml add the following, changing the paths accordingly:
+
+  #  environment = [ 
+  #   "JUCE_ROOT_DIR=C:/local/JUCE",
+  #   "AAX_INCLUDE_DIR=C:/local/AAX_SDK",
+  #   "VISR_SOURCE_DIR=C:/local/VISR",
+  #   "VISR_BUILD_DIR=C:/local/build",
+  #   "VISR_BUILD_DIR_PYTHON36=C:/local/build-visr-python36",
+  #   "VISR_BUILD_DIR_PYTHON37=C:/local/build-visr-python37",
+  #   "DOXYGEN_EXECUTABLE=C:/local/doxygen/bin/doxygen.exe",
+  #   'DOXYGEN_DOT_EXECUTABLE="C:/Program Files (x86)/Graphviz2.38/bin/dot.exe"',
+  #   'LATEX_COMPILER="C:/Program Files/MiKTeX 2.9/miktex/bin/x64/latex.exe"',
+  #   'PDFLATEX_COMPILER="C:/Program Files/MiKTeX 2.9/miktex/bin/x64/pdflatex.exe"',
+  #   "SNDFILE_LIBRARY=C:/local/VISR/3rd/lib/windows-x86_64/sndfile/sndfile-1.lib",
+  #   "SNDFILE_INCLUDE_DIR=C:/local/VISR/3rd/include/sndfile",
+  #   "BOOST_ROOT=C:/local/boost_1_67_0",
+  #   "SPHINX_EXECUTABLE=C:/Users/vaae/Anaconda3/Scripts/sphinx-build.exe",
+  #   "SPHINX_EXECUTABLE_PY36=C:/Users/vaae/Anaconda3/envs/python36/Scripts/sphinx-build.exe",
+  #   "SPHINX_EXECUTABLE_PY37=C:/Users/vaae/Anaconda3/Scripts/sphinx-build.exe",
+  #   "PYTHONHOME_PY36=C:/Users/vaae/Anaconda3/envs/python36",
+  #   "PYTHONHOME_PY37=C:/Users/vaae/Anaconda3"
+  # ]
+
+# after those changes just restart the runner with "gitlab-runner restart"  
+
+#############################################################################
+#                         Reusable configurations                           #
+#############################################################################
+
+.default_config: 
+  only:  
+    refs:
+      - master
+      - develop
+      - feature/ci-integration
+
+#############################################################################
+#                                TEMPLATES                                  #
+#############################################################################
+  
+#------------------- Config-and-generate stage template ---------------------
+.config_and_generate_macos_template:
+  #usage of hidden job for defining a common default job configuration
+  extends: .default_config
+  #note: #DOXYGEN_DOT_EXECUTABLE value is not used from CMAKE, but needs to be found through machine's env var -> added to PATH 
+  script:
+    - cmake -E remove_directory $BUILD_FOLDER
+    - cmake -E make_directory $BUILD_FOLDER
+    # to download the latest JUCE-master everytime
+    #- curl -L "https://github.com/WeAreROLI/JUCE/archive/master.zip" -o $BUILD_FOLDER/JUCE.zip
+    #- unzip "$BUILD_FOLDER/JUCE" -d "$BUILD_FOLDER"
+    # also substitute this to the options:
+    # -DJUCE_ROOT_DIR=JUCE-master
+    - CMAKE_OPTIONS_ALL="-DBUILD_ECOSYSTEM_ONLY=ON
+                         -DBUILD_DOCUMENTATION=ON
+                         -DDOXYGEN_EXECUTABLE=$DOXYGEN_EXECUTABLE
+                         -DLATEX_COMPILER=$LATEX_COMPILER
+                         -DPDFLATEX_COMPILER=$PDFLATEX_COMPILER
+                         -DBUILD_PLUGINS_IN_BUILD_FOLDER=ON
+                         -DBUILD_DAWPLUGINS_VST2=OFF
+                         -DBUILD_DAWPLUGINS_VST3=ON
+                         -DBUILD_REVERB=ON
+                         -DBUILD_CAP=ON
+                         -DJUCE_ROOT_DIR=$JUCE_ROOT_DIR 
+                         $CMAKE_OPTIONS"
+    - echo "variables\n\n $GENERATOR \n\n $CMAKE_OPTIONS_ALL \n\n $CMAKE_OPTIONS"
+    - cmake -E chdir $BUILD_FOLDER/ 
+      cmake -G $GENERATOR -DCMAKE_RULE_MESSAGES=OFF $CMAKE_OPTIONS_ALL ..
+  artifacts:
+    paths:
+      - $BUILD_FOLDER/ 
+  # allow_failure: true       
+
+.config_and_generate_windows_template:
+  #usage of hidden job for defining a common default job configuration
+  extends: .default_config
+  script:
+    - cmake -E remove_directory %BUILD_FOLDER%
+    - cmake -E make_directory %BUILD_FOLDER%
+    #note: #DOXYGEN_DOT_EXECUTABLE value is not used from CMAKE, but needs to be found through machine's env var -> part of usr(/local)/bin on MacOS
+    
+    # to download the latest JUCE-master everytime
+    #- powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/WeAreROLI/JUCE/archive/master.zip -OutFile %BUILD_FOLDER%/JUCE.zip"
+    #- powershell -Command "Expand-Archive %BUILD_FOLDER%/JUCE.zip -DestinationPath %BUILD_FOLDER%"
+    # also substitute this to the options:
+    #-DJUCE_ROOT_DIR=JUCE-master
+    - SET  CMAKE_OPTIONS_ALL=-DBUILD_ECOSYSTEM_ONLY=ON
+                             -DBUILD_DOCUMENTATION=ON
+                             -DDOXYGEN_EXECUTABLE=%DOXYGEN_EXECUTABLE%
+                             -DLATEX_COMPILER=%LATEX_COMPILER%
+                             -DPDFLATEX_COMPILER=%PDFLATEX_COMPILER%
+                             -DBUILD_PLUGINS_IN_BUILD_FOLDER=ON
+                             -DBUILD_DAWPLUGINS_VST2=OFF
+                             -DBUILD_DAWPLUGINS_VST3=ON
+                             -DBUILD_REVERB=ON
+                             -DBUILD_CAP=ON
+                             -DJUCE_ROOT_DIR=%JUCE_ROOT_DIR% 
+                             -DSNDFILE_LIBRARY=%SNDFILE_LIBRARY%
+                             -DSNDFILE_INCLUDE_DIR=%SNDFILE_INCLUDE_DIR%
+                             -DBOOST_ROOT=%BOOST_ROOT% 
+                             %CMAKE_OPTIONS%
+    - dot -V
+    - echo "%GENERATOR%" %CMAKE_OPTIONS% %DOXYGEN_EXECUTABLE% 
+    - cmake -E chdir %BUILD_FOLDER%/ 
+      cmake -G "%GENERATOR%" %CMAKE_OPTIONS_ALL% ..
+  artifacts:
+    paths:
+      - "%BUILD_FOLDER%/"
+  # allow_failure: true       
+
+#--------------------------- Build stage template ---------------------------
+.build_macos_template:
+  #usage of hidden job for defining a common default job configuration
+  extends: .default_config
+  script:
+    - echo "variables\n\n $PYTHONHOME \n\n $PYTHONHOME_PY36 \n\n $PYTHONHOME_PY37 \n\n $PYTHONPATH"
+    - cmake --build $BUILD_FOLDER/ --target --config Release --parallel 8
+    #-- -quiet 
+  artifacts:
+    paths:
+      - $BUILD_FOLDER/
+
+.build_windows_template:
+  #usage of hidden job for defining a common default job configuration
+  extends: .default_config
+  script:
+    - echo "%PYTHONHOME%" \n\n "%PYTHONPATH%"
+    - cmake --build %BUILD_FOLDER%/ --target --config Release --parallel 8
+  #-- /verbosity:quiet
+  artifacts:
+    paths:
+      - "%BUILD_FOLDER%/"
+
+#--------------------------- Test stage template ---------------------------
+.test_macos_template:
+  extends: .default_config
+  script:
+    - echo "variables\n\n $PYTHONHOME \n\n $PYTHONHOME_PY36 \n\n $PYTHONHOME_PY37 \n\n $PYTHONPATH"
+    - STRICTNESS_LEVEL=5
+    - curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_macOS.zip" -o pluginval.zip
+    - unzip pluginval
+    - for filename in $BUILD_FOLDER/dawplugins/vst3/Release/*.vst3; do 
+        pluginval.app/Contents/MacOS/pluginval --validate-in-process --output-dir "$BUILD_FOLDER/dawplugins/vst3/Release" --strictness-level $STRICTNESS_LEVEL --skip-gui-tests --validate "$filename" || exit 1; 
+      done
+    # - for filename in $BUILD_FOLDER/bin/Release/*/Contents/MacOS/*; do "$filename" & done          
+    # further testing: 
+    #         -run auval
+    #         -run aax validator
+  artifacts:
+    when: always
+    paths:
+      - $BUILD_FOLDER/dawplugins/vst3/Release/*.txt
+      - $BUILD_FOLDER/bin/Release/*.txt
+
+.test_macos_template_all:
+  extends: .default_config
+  script:
+    - STRICTNESS_LEVEL=5
+    - curl -L "https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_macOS.zip" -o pluginval.zip
+    - unzip pluginval
+    - for filename in $BUILD_FOLDER/dawplugins/vst3/Release/*.vst3; do 
+        pluginval.app/Contents/MacOS/pluginval --validate-in-process --output-dir "$BUILD_FOLDER/dawplugins/vst3/Release" --strictness-level $STRICTNESS_LEVEL --skip-gui-tests --validate "$filename" || exit 1; 
+      done
+    # --- Test STANDALONE
+    # - endlessloop_pids=( )                       # initialize an empty array to store PIDs
+    # - for filename in $BUILD_FOLDER/bin/Release/*/Contents/MacOS/*; do
+    #     "$filename" 2>>"$BUILD_FOLDER/bin/Release/error.txt" & endlessloop_pids+=( "$!" );
+    #     done
+    # - sleep 5
+    # - kill "${endlessloop_pids[@]}"
+    # - if [ -s error.txt ]; then
+    #     echo "Standalone test - failure";
+    #     exit 1;
+    #   else
+    #     echo "Standalone test - OK";
+    #   fi;
+    
+    # --- extra untested
+    # - for filename in $BUILD_FOLDER/bin/Release/*/Contents/MacOS/*; do "$filename" & done          
+    # further testing: 
+    #         -run auval
+    #         -run aax validator
+  artifacts:
+    when: always
+    paths:
+      - $BUILD_FOLDER/dawplugins/vst3/Release/*.txt
+      #- $BUILD_FOLDER/bin/Release/*.txt
+
+
+.test_windows_template:
+  extends: .default_config
+  script:
+    - echo "%PYTHONHOME%" \n\n "%PYTHONPATH%"
+    - SET STRICTNESS_LEVEL=5
+    - powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/download/latest_release/pluginval_Windows.zip -OutFile pluginval.zip"
+    - powershell -Command "Expand-Archive pluginval.zip -DestinationPath ."
+    - for /f "delims=" %%f IN ('dir /b /s "%BUILD_FOLDER%\dawplugins\vst3\Release\VISR*.vst3"') do (
+        pluginval.exe --validate-in-process --output-dir "%BUILD_FOLDER%\dawplugins\vst3\Release" --strictness-level %STRICTNESS_LEVEL% --skip-gui-tests --validate "%%f" &
+        if %ERRORLEVEL% neq 0 exit /b 1  
+      )
+    # --- Test STANDALONE
+    # - for /f "delims=" %f IN ('dir /b /s "C:\Local\gc1y17\build-production-suite\bin\Release\VISR*.exe"') do 
+    #     start "" "%~f" 2>&1
+    
+    # --- extra untested
+    # & if %ERRORLEVEL% neq 0 exit /b 1  
+    # further testing: 
+    #         -run standalone versions from command line
+    #         -run aax validator
+  artifacts:
+    when: always
+    paths:
+      - "%BUILD_FOLDER%/dawplugins/vst3/Release/*.txt"
+
+#--------------------------- Deploy stage template ---------------------------
+.deploy_macos_template:
+  extends: .default_config
+  script:
+    - cmake --build $BUILD_FOLDER/ --target package --config Release
+    # - installer -dumplog -pkg VISR-Production-Suite*.pkg -target /
+  artifacts:
+    paths:
+      - $BUILD_FOLDER/VISR-Production-Suite*.pkg
+
+.deploy_windows_template:
+  extends: .default_config
+  script:
+    - cmake --build %BUILD_FOLDER%/ --target package --config Release
+  artifacts:
+    paths:
+      - "%BUILD_FOLDER%/VISR-Production-Suite*.exe"

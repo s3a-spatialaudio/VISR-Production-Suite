@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<panningConfiguration dimension="2" infinite="false">
+    <loudspeaker id="M+030" channel="1">
+        <polar az="30.0" el="0" r="1"/>
+    </loudspeaker>
+    <loudspeaker id="M-030" channel="2">
+        <polar az="-30.0" el="0" r="1"/>
+    </loudspeaker>
+    <virtualspeaker id="VotD">
+        <polar az="180.0" el="0" r="1.0"/>
+        <route lspId="M+030" gainDB="-6.02"/>
+        <route lspId="M-030" gainDB="-6.02"/>
+    </virtualspeaker>
+    <triplet l1="M+030" l2="VotD"/>
+    <triplet l1="M-030" l2="VotD"/>
+    <triplet l1="M-030" l2="M+030"/>
+</panningConfiguration>

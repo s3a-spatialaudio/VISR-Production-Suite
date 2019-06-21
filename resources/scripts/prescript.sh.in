@@ -1,0 +1,20 @@
+#!/bin/sh
+if [ -d "@CMAKE_INSTALL_PREFIX@" ]; then
+    sudo rm -R "@CMAKE_INSTALL_PREFIX@"
+fi
+
+if [ -d "/Library/Audio/Plug-Ins/VST/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@" ]; then
+sudo rm -R "/Library/Audio/Plug-Ins/VST/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@"
+fi
+
+if [ -d "/Library/Audio/Plug-Ins/VST3/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@" ]; then
+sudo rm -R "/Library/Audio/Plug-Ins/VST3/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@"
+fi
+
+if [ -d "/Library/Audio/Plug-Ins/Components/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@" ]; then
+sudo rm -R "/Library/Audio/Plug-Ins/Components/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@"
+fi
+
+if [ -d "/Library/Application Support/Avid/Audio/Plug-Ins/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@" ]; then
+sudo rm -R  "/Library/Application Support/Avid/Audio/Plug-Ins/@VISR_PRODUCTION_SUITE_TOPLEVEL_NAME@"
+fi

@@ -1,0 +1,82 @@
+Changelog for project VISR Production Suite
+
+Version 0.12.0
+==============
+* CAP Renderer plugin fully working
+* MDO plugins fully working
+* Reverb Object Editor plugin fully working
+* new dual audioflow for tracker and audioflow
+* Codebase restructuring
+* Minor fixes
+
+Version 0.11.2
+==============
+* Fixes in the documentation
+* Enhanced Metadapter Renderer usability
+* Minor fixes
+
+Version 0.11.1
+==============
+* Licensing updated
+* Code cleaning
+* Minor bug fixes
+
+Version 0.11.0
+==============
+* GUI major change: OpenGL drawing for proper responsiveness among plugins.
+* major restructuring plugin architecture, implementing and testing a more MVC-like structure
+* solved bug of no-longer-existing permanent objects in SceneMaster and Renderers when changing object IDs.
+* fixed improper initialisation of Object Editor on first instantiation
+* reduced plugin size
+* introduced default HRIR dataset
+* fixed a GUI bug where the look and feel of knobs and other widgets changed to a default look and feel after some user actions on the GUI. 
+* updated DAW sessions and templates
+
+Patch release 0.10.3
+--------------------
+
+* Updated documentation.
+* Full VST3 support.
+* Plugins added to the right plugin categories (Spatial and Surround).
+* Updated and enhanced Reaper example Sessions and Templates.
+* Resized plugin GUI for better user experience with different screen resolutions.
+* Cleaned plugin GUI drawing and layout code.
+* Changed VISR-Production-Suite VST folder name in default Plug-in path, to avoid coexisting different versions of the plugins.
+* Better integration with VISR in building the VISR Production Suite.
+* Other minor fixes.
+
+Patch release 0.10.2
+--------------------
+
+* Added python 3.7 support.
+* Fixed UI problem with Loudspeaker rings position in Loudspeaker Renderer plugin.
+* New generic bs2051 loudspeaker configurations now available for Loudspeaker Renderer plugin.
+* Minor GUI issues fixed
+* Major restructuring of CMake plugin generation from source.
+* Typo fixes in doc
+
+Patch release 0.10.1
+--------------------
+
+* Added support for system wide Anaconda installation, and for Python installed via homebrew.
+* Fixes for new non-python installer.
+* Improved documentation and Readme file.
+* Changed the set of loudspeaker configurations provided (added 5.1).
+* Automatic reordering by object ID in Scene Master’s object table.
+* Fixes for Settings panels path choosing.
+* No longer saving state of objects in Scene Master and rendering plugins
+* Changed Plugin folders from User default folder to System default folder
+* Removed all the Python direct dependencies, now they are only taken from VISR
+* Fixed a reverb configuration problem in Loudspeaker Renderer. It solves many issues when changing loudspeaker configurations.
+* Plugin names prepended with “VISR”
+* Added relative paths for audio content in REAPER sessions
+* Internal MACRO name change
+
+Version 0.10.0
+==============
+
+* Component-based installers for Windows and Mac OS X (based on PKG / ProductBuild )
+* Added sphinx-based user documentation (userdoc)
+* Fixing of Python rpaths in Mac OS X during installation.
+* Established gitflow versioning and release management scheme
+

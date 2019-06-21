@@ -1,0 +1,24 @@
+/**
+@page libdawsupport_mainpage Main documentation page for libdawsupport
+ 
+@tableofcontents
+
+
+@section libdawsupport_mainpage_overview Overview
+<br> The S3A production tools are based on the VISR (Versatile Interactive Software Rendering) software framework for audio, which provides useful features such as realtime object-based audio handling.
+<br> Libdawsupport is the library that facilitates  the intercommunication between the plugin world, based mainly on JUCE framework, and the VISR framework.
+<br> To do this the library acts as a layer which wraps VISR entities and provides handy interfaces for the DAW plugin developer that wants to use them.
+
+The library is conceptually composed by two main Wrapper categories:
+* * <tt> @ref VISR_component_wrapper
+* * <tt> @ref VISR_sound_object_wrapper
+
+@section VISR_component_wrapper VISR Component wrapper
+
+
+@section VISR_sound_object_wrapper VISR sound object wrapper
+
+
+@see libdawsupport
+
+*/

@@ -1,0 +1,13 @@
+<LoudspeakerMetadata>
+    <ID Unit="" Type="Int" Range="0:inf" Value="" Description="Unique (integer) loudspeaker identifier"/>
+    <Channel Unit="" Type="Int" Range="0:inf" Value="" Description="Physical output channel number"/>
+    <Azimuth Unit="Deg." Type="Int" Range="0:360" Value="0" Description="Loudspeaker position relative to central listening position"/>
+    <Elevation Unit="Deg." Type="Int" Range="0:360" Value="0" Description="Loudspeaker position relative to central listening position"/>
+    <Distance Unit="m" Type="Float" Range="0:inf" Value="1" Description="Loudspeaker position relative to central listening position"/>
+    <Gain Unit="dB" Type="Float" Range="-inf:inf" Value="0" Description=""/>
+    <Delay Unit="s" Type="Float" Range="0:inf" Value="0" Description=""/>
+    <Label Unit="" Type="Text" Range="" Value="defaultName" Description="Loudspeaker label, used for display"/>
+    <Auxiliary Unit="" Type="Boolean" Range="" Value="0" Description="Determines whether the loudspeaker should be considered as part of the main array or as an extra loudspeaker"/>
+    <Quality Unit="" Type="Choice" Range="Low;Medium;High" Value="2" Description="Loudspeaker quality tag"/>
+    <Function Unit="" Type="Choice" Range="Primary;Secondary" Value="1" Description="Used in combination with the audio object function field to control the placement of certain types of sound"/>
+</LoudspeakerMetadata>

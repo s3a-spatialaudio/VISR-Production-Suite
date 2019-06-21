@@ -1,0 +1,14 @@
+/**
+@page libdawutilities_mainpage Main documentation page for libdawutilities
+ 
+@tableofcontents
+
+
+@section libdawutilities_mainpage_overview Overview
+Libdawutilities is a core library which contains the main infrastructure and common tools used in most of the DAW plugins. 
+<br> It contains useful extensions of JUCE classes which use the included object-based tools and tailored graphics/look-and-feel classes.
+<br> The intention of the library is to provide the DAW plugin developer with means to make their own object-based plugin.
+<br> To do so it uses JUCE framework, which features portability, multiple plugin format handling, and an easy to use abstraction layer. Therefore the main structure of a JUCE plugin project is used, while adding features which are common among the S3A object-based production tools suite.
+
+@see libdawutilities
+*/

@@ -1,0 +1,26 @@
+
+#define DONT_SET_USING_JUCE_NAMESPACE 1
+
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_basics             1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_devices            1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_formats            1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_plugin_client      1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_processors         1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_audio_utils              1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_core                     1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_data_structures          1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_events                   1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_graphics                 1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_gui_basics               1
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_gui_extra                0
+#cmakedefine JUCE_MODULE_AVAILABLE_juce_dsp                      1
+
+
+
+#define JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED 1
+
+#define JUCE_DISPLAY_SPLASH_SCREEN 1
+#define JUCE_REPORT_APP_USAGE 1
+
+#define JUCE_USE_DARK_SPLASH_SCREEN 1
+#define JUCE_OPENGL_ALLOW_NON_POWER_OF_TWO_TEXTURES 1

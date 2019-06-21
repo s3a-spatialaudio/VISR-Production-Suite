@@ -1,0 +1,7 @@
+*~
+build*
+.project
+__pycache__
+.DS_Store
+*.reapeaks
+*-bak
